@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -20,18 +19,49 @@ public class TodoRestController {
         this.todoService = todoService;
     }
 
-    // Create
-    @PostMapping("/todolist")
-    public ResponseEntity<Boolean> createTodoList(@PathVariable TodoList todoList) {
-        if(todoService.createTodoList(todoList))
+    /**
+     *  Create Todo
+     */
+    @PostMapping("/todolist/{user}")
+    public ResponseEntity<Boolean> create(@PathVariable String user,
+                                                  @RequestBody TodoList todoList) {
+        log.info("user : " + user);
+        if(todoService.setTodoList(todoList))
             return new ResponseEntity<>(true, HttpStatus.OK);
         else
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
-    // Read
+    /**
+     *  Read Todo
+     */
     @GetMapping("/todolist/users/{user}")
-    public ResponseEntity<TodoList> getTodoList(@PathVariable String user) {
-        return new ResponseEntity<>(todoService.getTodoListByUser(user), HttpStatus.OK);
+    public ResponseEntity<List<TodoList>> read(@PathVariable String user) {
+        List<TodoList> todoList = todoService.getTodoListByUser(user);
+        return new ResponseEntity<>(todoList, HttpStatus.OK);
+    }
+
+    /**
+     *  Update Todo
+     */
+    @PutMapping("/todolist/users")
+    public ResponseEntity<Boolean> update(@RequestBody TodoList todoList) {
+        if(todoService.updateTodoListBy(todoList))
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+    }
+
+
+    /**
+     *  Delete Todo
+     */
+    @DeleteMapping("/todolist/users/{user}/{idx}")
+    public ResponseEntity<Boolean> delete(@PathVariable String user,
+                                          @PathVariable String idx) throws Exception {
+        if(todoService.deleteTodoListByUserAndIdx(user, idx))
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
     }
 }
