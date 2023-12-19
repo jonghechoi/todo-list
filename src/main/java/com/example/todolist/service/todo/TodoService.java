@@ -9,5 +9,5 @@ public interface TodoService {
     boolean setTodoList(TodoList todoList);
     List<TodoList> getTodoListByUser(String user);
     boolean deleteTodoListByUserAndIdx(String user, String idx) throws Exception;
-    boolean updateTodoListBy(TodoList todoList);
+    boolean updateTodoListBy(TodoList todoList) throws Exception;
 }

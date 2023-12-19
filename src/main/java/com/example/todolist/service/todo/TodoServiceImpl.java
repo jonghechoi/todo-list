@@ -39,15 +39,12 @@ public class TodoServiceImpl implements TodoService{
     }
 
     @Override
-    public boolean updateTodoListBy(TodoList todoList) {
-        todoRepository.findTodoListByUserAndIdx(todoList.getUser(), todoList.getIdx())
-                .map(newTodoList -> {
-                    newTodoList.setTitle(newTodoList.getTitle());
-                    newTodoList.setContents();
-                    newTodoList.setDate();
-                    newTodoList.setTime();
-                    todoRepository.save()
-                } )
-
+    public boolean updateTodoListBy(TodoList todoList) throws Exception {
+        return todoRepository.findTodoListByUserAndIdx(todoList.getUser(), todoList.getIdx())
+                .map((oldTodoList) -> {
+                    todoRepository.delete(oldTodoList);
+                    todoRepository.save(todoList);
+                    return true; })
+                .orElseThrow(() -> new Exception("No such TodoList"));
     }
 }

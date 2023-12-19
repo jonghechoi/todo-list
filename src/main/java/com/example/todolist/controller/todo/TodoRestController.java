@@ -24,8 +24,7 @@ public class TodoRestController {
      */
     @PostMapping("/todolist/{user}")
     public ResponseEntity<Boolean> create(@PathVariable String user,
-                                                  @RequestBody TodoList todoList) {
-        log.info("user : " + user);
+                                          @RequestBody TodoList todoList) {
         if(todoService.setTodoList(todoList))
             return new ResponseEntity<>(true, HttpStatus.OK);
         else
@@ -45,7 +44,7 @@ public class TodoRestController {
      *  Update Todo
      */
     @PutMapping("/todolist/users")
-    public ResponseEntity<Boolean> update(@RequestBody TodoList todoList) {
+    public ResponseEntity<Boolean> update(@RequestBody TodoList todoList) throws Exception {
         if(todoService.updateTodoListBy(todoList))
             return new ResponseEntity<>(true, HttpStatus.OK);
         else
